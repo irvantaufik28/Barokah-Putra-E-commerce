@@ -25,6 +25,7 @@ class Auth {
             result.reason = "phone already exist"
             return result
         }
+        user = await this.authRepository.registerUser(user_data)
         result.is_success = true;
         result.status = 200
         result.data = user

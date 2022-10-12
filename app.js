@@ -1,9 +1,12 @@
 const express = require('express')
 const app = express()
-
+const http =require ('http')
+const socketIO = require('socket.io')
 app.use('/public', express.static('public'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
+
+const serverError = require("./src/middleware/server_error")
 
 const AuthRepository = require("./src/repository/auth")
 const AuthUseCase = require("./src/usecase/auth")
@@ -27,9 +30,13 @@ const OrderUseCase = require("./src/usecase/order")
 const OrderRepository = require("./src/repository/order")
 const OrderDetailRepository = require("./src/repository/orderDetail")
 
+const ChatRepository = require ("./src/repository/chat")
+const ChatUseCase = require ("./src/usecase/chat")
+
 const adminRouter = require("./src/routes/admin_router")
 const customerRouter = require("./src/routes/customer_router")
 const authRouter = require("./src/routes/auth_router")
+const chatRouter = require("./src/routes/chat_router")
 
 const authUC = new AuthUseCase(
     new AuthRepository(),
@@ -58,6 +65,9 @@ const orderUC = new OrderUseCase(
     new ProductRepository()
 )
 
+const chatUC = new ChatUseCase(new ChatRepository())
+
+
 app.use((req, res, next) => {
     req.authUC = authUC
     req.productUC = productUC
@@ -66,6 +76,7 @@ app.use((req, res, next) => {
     req.userUC = userUC
     req.addressUC = addressUC
     req.orderUC = orderUC
+    req.chatUC = chatUC
     next()
 })
 app.get('/', (req, res) => {
@@ -74,7 +85,23 @@ app.get('/', (req, res) => {
 
 app.use('/admin', adminRouter)
 app.use('/customer', customerRouter)
+app.use('/chat', chatRouter)
 app.use('/', authRouter)
+
+
+
+const httpServer = http.createServer(app)
+
+const io = socketIO(httpServer)
+io.use((socket , next)=>{
+    io.on('connection', (socket)=>{
+        let user_id = socket.handshake.auth.user.id
+        
+    })
+})
+
+
+
 app.use(serverError);
 const swaggerUi = require('swagger-ui-express')
 const swaggerDocument = require('./src/docs/docs.json')

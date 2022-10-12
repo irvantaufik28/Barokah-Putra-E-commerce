@@ -1,6 +1,5 @@
 const express = require('express')
 const router = express.Router()
-const handleUpload =require("../libs/handle_Upload")
 const user_controller = require('../controllers/user_controller')
 const address_controller = require('../controllers/address_controller')
 const product_controller = require('../controllers/product_controller')
