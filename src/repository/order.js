@@ -40,6 +40,11 @@ class OrderRepository {
       where : {order_id : order_id}
     })
   }
+  async changeOrderStatus (order_id, status){
+    return await this.OrderModel.update(status,{
+      where:{id:order_id}
+    })
+  }
 
 }
 

@@ -4,11 +4,11 @@ module.exports = {
   getOrder: async (req, res, next) => {
     let user_id = req.user.id;
     try {
-      let order = await req.orderUC. getPendingOrderByUserID(user_id);
+      let order = await req.orderUC.getPendingOrderByUserID(user_id);
       if (order.is_success !== true) {
         return res
-        .status(order.status)
-        .json(res_data.failed(order.reason));
+          .status(order.status)
+          .json(res_data.failed(order.reason));
       }
       res.status(order.status).json(res_data.success(order.data));
     } catch (e) {
@@ -19,9 +19,9 @@ module.exports = {
   createOrder: async (req, res, next) => {
     let user_id = req.user.id
     let items = req.body.items
-    try{
+    try {
       let create_res = await req.orderUC.createOrder(user_id, items)
-      if(create_res.is_success !== true){
+      if (create_res.is_success !== true) {
         return
       }
       res.status(create_res.status).json(create_res.data)
@@ -29,13 +29,17 @@ module.exports = {
       next(e)
     }
   },
-  changeStatuOrder :async(req, res, next)=>{
+  changeStatuOrder: async (req, res, next) => {
     let user_id = req.user.id
-    let order_data = await req.orderUC.getOrder(user_id)
-    if(order_data.is_success !== true){
-      return res.status(order_data.status).json(res_data.failed(order_data.reason))
+    try {
+      
+    let res_update =  await req.orderUC.changeOrderStatus(user_id)
+      if(res_update.is_success !== true){
+        return 
+      }
+      res.status(200).json(res_data.success())
+    } catch (e) {
+      next(e)
     }
-    await req.orderUC.changeOrderStatus(order_data.id, order_constants.ORDER_SUBMITTED)
-    res.status(200).json(res_data.success())
   }
 }
