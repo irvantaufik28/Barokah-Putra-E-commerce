@@ -75,7 +75,7 @@ app.get('/', (req, res) => {
 app.use('/admin', adminRouter)
 app.use('/customer', customerRouter)
 app.use('/', authRouter)
-
+app.use(serverError);
 const swaggerUi = require('swagger-ui-express')
 const swaggerDocument = require('./src/docs/docs.json')
 

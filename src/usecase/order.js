@@ -87,14 +87,14 @@ class Order {
   }
   async changeOrderStatus(user_id) {
     let result = {
-      is_success : false,
+      is_success: false,
       reason: '',
       status: 404,
-      data : null
+      data: null
     }
     let status = order_constants.ORDER_SUBMITTED
     let getPendingOrder = await this.orderRepository.getPendingOrderByUserID(user_id)
-    if(getPendingOrder === null){
+    if (getPendingOrder === null) {
       result.reason = "customer has not ordered"
       return result
     }
@@ -103,13 +103,13 @@ class Order {
     result.status = 200
     return result
   }
-    async updateStock  (product_id, qty, status) {
+  async updateStock(product_id, qty, status) {
     let product = await this.productRepository.getOrderByOrdeID(product_id)
     let newStock = 0
-    if (status === order_constants.ORDER_PROCESSED){
+    if (status === order_constants.ORDER_PROCESSED) {
       newStock = product.stock - qty
     }
-    if(status === order_constants.ORDER_CANCELED){
+    if (status === order_constants.ORDER_CANCELED) {
       newStock = product.stock + qty
     }
     return await this.productRepository.updateProduct({

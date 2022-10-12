@@ -61,11 +61,6 @@ class Category {
          data: null
        }
       let category = await this.categoryRepository.createCategory(data_category);
-      if (category == null) {
-         result.reason = "somethig went error"
-         result.status = 500
-         return result
-      }
       result.is_success = true;
       result.status = 200
       result.data = category
@@ -107,11 +102,7 @@ class Category {
          return result
       }
       let category = await this.categoryRepository.deleteCategory(id)
-      if (category == null) {
-         result.reason = "internal server error"
-         result.status = 500
-         return result 
-      }
+     
       result.is_success = true;
       result.status = 200
       result.data = category

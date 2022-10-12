@@ -17,7 +17,7 @@ class Product {
       return result
     }
     result.is_success = true;
-    result.status =200
+    result.status = 200
     result.data = product
     return result
   }
@@ -35,7 +35,7 @@ class Product {
       return result
     }
     result.is_success = true;
-    result.status =200
+    result.status = 200
     result.data = products
     return result
   }
@@ -54,13 +54,10 @@ class Product {
       result.reason = "failed add product, category not found"
       return result
     }
-   let product = await this.productRepository.createProduct(data_product);
-    if (product == null) {
-      result.reason = "something went wrong"
-      return result
-    }
+    await this.productRepository.createProduct(data_product);
+
     result.is_success = true;
-    result.status =200
+    result.status = 200
     result.data = product
     return result
   }
@@ -86,7 +83,7 @@ class Product {
       return result
     }
     result.is_success = true;
-    result.status =200
+    result.status = 200
     return result
   }
   async deleteProduct(id) {
@@ -107,7 +104,7 @@ class Product {
       return result
     }
     result.is_success = true;
-    result.status =200
+    result.status = 200
     return result
   }
 }

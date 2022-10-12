@@ -10,8 +10,7 @@ class Auth {
             status: 404,
             data: null
         }
-        let user = null
-        user = await this.userRepository.getUserByUsername(user_data.username);
+       let user = await this.userRepository.getUserByUsername(user_data.username);
         if (user != null) {
             result.reason = "username already exist"
             return result
@@ -24,12 +23,6 @@ class Auth {
         user = await this.userRepository.getUserByPhone(user_data.phone);
         if (user != null) {
             result.reason = "phone already exist"
-            return result
-        }
-        user = await this.authRepository.registerUser(user_data);
-        if (user == null) {
-            result.reason = "internal server error"
-            result.status = 500
             return result
         }
         result.is_success = true;
