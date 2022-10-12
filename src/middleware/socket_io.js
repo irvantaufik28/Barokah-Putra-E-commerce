@@ -11,10 +11,10 @@ function getToken(authHeader) {
     return splitHeader[0];
 }
 
-const authorized = (socket, next) => {
+function authorized (socket, next) {
     let authHeader = socket.handshake.headers['authorization']
 
-    if (authHeader !== undefined && typeof authHeader !== 'string') {
+    if (typeof authHeader !== 'string') {
         return next(new Error(res_data.failed('unauthorized')));
     }
    
@@ -28,7 +28,7 @@ const authorized = (socket, next) => {
     }
 
     let auth = {
-        user: payload.user,
+        username: payload.username,
         role_id: payload.role_id
     };
     socket.handshake.auth = auth

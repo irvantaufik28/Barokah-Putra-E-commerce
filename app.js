@@ -89,15 +89,25 @@ app.use('/chat', chatRouter)
 app.use('/', authRouter)
 
 
-
+const socketIO_auth = require ('./src/middleware/socket_io')
 const httpServer = http.createServer(app)
-
 const io = socketIO(httpServer)
-io.use((socket , next)=>{
-    io.on('connection', (socket)=>{
-        let user_id = socket.handshake.auth.user.id
-        
+
+io.use(socketIO_auth)
+io.on('connection', (socket)=>{
+
+    let user_id = socket.handshake.auth.username
+    let room = `room_${user_id}`
+    socket.join(room)
+    
+    socket.on('sendChat', async(chat_data)=>{
+        socket.emit('onNewMessage', chat_data)
     })
+
+
+    socket.on('disconnected', ()=>{
+        console.log('user disconnected...')
+    }) 
 })
 
 
@@ -110,4 +120,4 @@ const swaggerDocument = require('./src/docs/docs.json')
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 
 
-module.exports = app
+module.exports = httpServer

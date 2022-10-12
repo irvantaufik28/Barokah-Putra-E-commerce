@@ -10,7 +10,7 @@ module.exports = {
                 .status(res_chat.status)
                 .json(res_data.failed(res_chat.reason))
             }
-            res.status(res_data.status).json(res_data.success(res_chat.data))
+            res.status(res_chat.status).json(res_data.success(res_chat.data))
         } catch (e) {
             next(e)
         }
