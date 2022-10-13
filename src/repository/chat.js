@@ -14,6 +14,9 @@ class ChatRepository {
             ]
         })
     }
+    async insertChat (chat_data){
+        return await this.modelChat.create(chat_data)
+    }
 }
 
 module.exports = ChatRepository

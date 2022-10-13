@@ -89,19 +89,28 @@ app.use('/chat', chatRouter)
 app.use('/', authRouter)
 
 
-const socketIO_auth = require ('./src/middleware/socket_io')
+const auth = require ('./src/middleware/auth')
 const httpServer = http.createServer(app)
 const io = socketIO(httpServer)
 
-io.use(socketIO_auth)
+io.use(auth.socket_io)
 io.on('connection', (socket)=>{
 
-    let user_id = socket.handshake.auth.username
+    let user_id = socket.handshake.auth.id
     let room = `room_${user_id}`
     socket.join(room)
     
     socket.on('sendChat', async(chat_data)=>{
-        socket.emit('onNewMessage', chat_data)
+        let recipient = chat_data.recipient_id
+        chat_data.sender_id = user_id
+        let result = await chatUC.insertChat(chat_data)
+        if(result !== null){
+            socket.emit('onNewChat', result)
+            socket.to(`room_${recipient}`).emit('onNewChat', {
+                ...result,
+                is_sender: false
+            })
+        }
     })
 
 

@@ -70,4 +70,30 @@ const customer = (req, res, next) => {
   next();
 };
 
-module.exports = { customer, admin };
+
+function socket_io (socket, next) {
+  let authHeader = socket.handshake.headers['authorization']
+
+  if (typeof authHeader !== 'string') {
+      return next(new Error(res_data.failed('unauthorized')));
+  }
+ 
+  let token = getToken(authHeader);
+  let payload = null;
+
+  try {
+      payload = jwt.verify(token, process.env.JWT_KEY_SECRET);
+  } catch (err) {
+      return next(new Error(res_data.failed('unauthorized')))
+  }
+
+  let auth = {
+      username: payload.username,
+      role_id: payload.role_id
+  };
+  socket.handshake.auth = auth
+  next()
+
+};
+
+module.exports = { customer, admin, socket_io };

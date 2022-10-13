@@ -15,5 +15,16 @@ class Chat {
         result.data = chat
         return result
     }
+    async insertChat(chat_data) {
+        let result = await this.ChatRepositoy.insertChat(chat_data)
+        if(result === null) {
+            return null
+        }
+
+        return {
+            ...result.get(),
+            is_sender: true
+        }
+    }
 }
 module.exports = Chat
