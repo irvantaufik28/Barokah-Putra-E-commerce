@@ -1,16 +1,24 @@
+const default_Image = require("../internal/constants/defaultImage")
+
 class Auth {
-    constructor(authRepository, userRepository) {
+    constructor(authRepository, userRepository, bcrypt, cloudinary, generateToken, _) {
         this.authRepository = authRepository;
         this.userRepository = userRepository;
+        this.cloudinary = cloudinary;
+        this.token = generateToken;
+        this._ = _;
+        this.bcrypt = bcrypt;
     }
+    
     async register(user_data) {
         let result = {
             is_success: false,
             reason: "failed",
             status: 404,
-            data: null
+            data: null,
+            token: null
         }
-       let user = await this.userRepository.getUserByUsername(user_data.username);
+        let user = await this.userRepository.getUserByUsername(user_data.username);
         if (user != null) {
             result.reason = "username already exist"
             return result
@@ -25,10 +33,27 @@ class Auth {
             result.reason = "phone already exist"
             return result
         }
-        user = await this.authRepository.registerUser(user_data)
+        if (user_data.password !== user_data.confrimPassword) {
+            result.reason = "password and confrim password not match"
+            return result
+        }
+
+        user_data.password = this.bcrypt.hashSync(user_data.password, 10)
+
+        if (user_data.avatar !== default_Image.DEFAULT_AVATAR) {
+            let image = await this.cloudinary.uploadCloudinaryAvatar(user_data.avatar)
+            user_data.avatar = image
+            user = await this.authRepository.registerUser(user_data)
+        } else {
+            user = await this.authRepository.registerUser(user_data)
+        }
+        let newUser = this._.omit(user.dataValues, ['password'])
+        let token = this.token(newUser)
+
         result.is_success = true;
         result.status = 200
-        result.data = user
+        result.data = newUser
+        result.token = token
         return result
     }
 
@@ -37,17 +62,25 @@ class Auth {
             is_success: false,
             reason: "failed",
             status: 404,
-            data: null
+            data: null,
+            token: null,
         }
-        let user = await this.authRepository.loginUser(username, password)
+        let user = await this.authRepository.loginUser(username)
         if (user == null) {
             result.reason = "incorect username or password"
-            result.status = 404
             return result
         }
+        if (!this.bcrypt.compareSync(password, user.password)) {
+            result.reason = "incorect username or password"
+            return result
+        }
+        let newUser = this._.omit(user.dataValues, ['password'])
+        let token = this.token(newUser)
+
         result.is_success = true;
         result.status = 200
-        result.data = user
+        result.data = newUser
+        result.token = token
         return result
     }
 }

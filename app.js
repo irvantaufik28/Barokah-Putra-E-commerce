@@ -1,10 +1,15 @@
 const express = require('express')
+const bcrypt = require("bcrypt")
+const cloudinary = require("./src/libs/handle_Upload");
+const generateToken = require("./src/helper/jwt");
+const _ = require("lodash")
 const app = express()
 const http =require ('http')
 const socketIO = require('socket.io')
 app.use('/public', express.static('public'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
+
 
 const serverError = require("./src/middleware/server_error")
 
@@ -40,7 +45,11 @@ const chatRouter = require("./src/routes/chat_router")
 
 const authUC = new AuthUseCase(
     new AuthRepository(),
-    new UserRepository()
+    new UserRepository(), 
+    bcrypt, 
+    cloudinary,
+    generateToken, 
+    _,
 )
 
 const userUC = new UserUseCase(new UserRepository())
