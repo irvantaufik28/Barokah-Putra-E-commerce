@@ -53,8 +53,8 @@ module.exports = {
     let id = req.user.id
     let user = {
       oldPassword: req.body.oldPassword,
-      newPassword : req.body.newPassword,
-      confrimNewPassword : req.body.confrimNewPassword
+      newPassword: req.body.newPassword,
+      confrimNewPassword: req.body.confrimNewPassword
     }
     try {
       let res_user = await req.userUC.updatePassword(user, id)
@@ -69,38 +69,43 @@ module.exports = {
     }
 
   },
-  updateEmail : async (req, res, next)=>{
+  updateEmail: async (req, res, next) => {
     let id = req.user.id
     let user = {
-      email : req.body.email,
-      otp_code : req.body.otp_code
+      email: req.body.email,
+      otp_code: req.body.otp_code
     }
     try {
-      
+
       let res_update = await req.userUC.updateEmail(user, id)
-      if(res_update.is_success !== true){
+      if (res_update.is_success !== true) {
         return res
-        .status(res_update.status).json(res_data.failed(res_update.reason))
+          .status(res_update.status).json(res_data.failed(res_update.reason))
       }
       res.status(res_update.status).json(res_data.success())
     } catch (e) {
       next(e)
     }
   },
-  resetPassword : async (req, res, next)=>{
+  resetPassword: async (req, res, next) => {
     let email = req.query.email
     let user = {
-      newPassword : req.body.newPassword,
-      confrimNewPassword : req.body.confrimNewPassword,
-      otp_code : req.body.otp_code
+      newPassword: req.body.newPassword,
+      confrimNewPassword: req.body.confrimNewPassword,
+      otp_code: req.body.otp_code
     }
-    let res_reset = await req.userUC.resetPassword(user , email)
-    if(res_reset.is_success !== true){
-      return res
-      .status(res_reset.status).json(res_data.failed(res_reset.reason))
+    try {
+      let res_reset = await req.userUC.resetPassword(user, email)
+      if (res_reset.is_success !== true) {
+        return res
+          .status(res_reset.status).json(res_data.failed(res_reset.reason))
+      }
+      res.status(res_reset.status).json(res_data.success())
+
+    } catch (e) {
+      next(e)
     }
-    res.status(res_reset.status).json(res_data.success())
   }
-  
+
 
 };
