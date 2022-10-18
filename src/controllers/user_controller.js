@@ -86,6 +86,21 @@ module.exports = {
     } catch (e) {
       next(e)
     }
+  },
+  resetPassword : async (req, res, next)=>{
+    let email = req.query.email
+    let user = {
+      newPassword : req.body.newPassword,
+      confrimNewPassword : req.body.confrimNewPassword,
+      otp_code : req.body.otp_code
+    }
+    let res_reset = await req.userUC.resetPassword(user , email)
+    if(res_reset.is_success !== true){
+      return res
+      .status(res_reset.status).json(res_data.failed(res_reset.reason))
+    }
+    res.status(res_reset.status).json(res_data.success())
   }
+  
 
 };

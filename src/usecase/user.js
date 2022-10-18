@@ -121,6 +121,37 @@ class User {
     result.status = 200
     return result
   }
+
+  async resetPassword (user_data, email) {
+    let result = {
+      is_success : false,
+      reason : '',
+      status : 400
+    }
+    if(user_data.newPassword !== user_data.confrimNewPassword){
+      result.reason = "confrim new password not match"
+      return result
+    }
+    let user = await this.userRepository.getUserByEmail(email)
+    if(user === null){
+      result.reason = "user not found"
+      result.status = 400
+      return result
+    }
+    let otp = await this.otpRepository.getOTP(email , user_data.otp_code,"RESETPASSWORD" )
+    if(otp === null){
+      result.reason = "invalid otp code"
+      return result
+    }
+    user_data.password = user_data.newPassword
+    user_data.password = this.bcrypt.hashSync(user_data.password, 10)
+    await this.userRepository.updatePassword(user_data, user.id)
+    await this.otpRepository.deleteAllOtp(email)
+
+    result.is_success = true,
+    result.status = 200
+    return result
+  }
 }
 
 
