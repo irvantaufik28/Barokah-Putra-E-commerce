@@ -64,8 +64,9 @@ module.exports = {
   },
   deleteAddress: async (req, res, next) => {
     let id = req.params.id;
+    let user_id = req.user.id
     try {
-      let delete_res = await req.addressUC.deleteAddress(id);
+      let delete_res = await req.addressUC.deleteAddress(id, user_id);
       if (delete_res.is_success !== true) {
         return res
           .status(delete_res.status)
@@ -77,14 +78,12 @@ module.exports = {
     }
   },
   changeMainAddress: async (req, res, next) => {
-    let id = req.params.id
-    let address = {
-      user_id: req.user_id,
-      main_address: true
-    }
+    let address_id = req.params.address_id 
+    let user_id = req.user.id
+     
     try {
 
-      let res_update = await req.addressUC.changeMainAddress(address, id)
+      let res_update = await req.addressUC.changeMainAddress(address_id, user_id )
       if (res_update.is_success !== true) {
         return res
           .status(res_update.status)
