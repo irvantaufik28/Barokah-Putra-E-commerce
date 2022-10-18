@@ -28,7 +28,7 @@ module.exports = {
       next(e);
     }
   },
-  editUser: async (req, res, next) => {
+  updateProfile: async (req, res, next) => {
     try {
       let id = req.user.id
       let user = {
@@ -36,10 +36,9 @@ module.exports = {
         lastName: req.body.lastName,
         username: req.body.username,
         phone: req.body.phone,
-        email: req.body.email,
       };
 
-      let res_update = await req.userUC.updateUser(user, id);
+      let res_update = await req.userUC.updateUserProfile(user, id);
       if (res_update.is_success !== true) {
         return res
           .status(res_update.status)
@@ -58,17 +57,35 @@ module.exports = {
       confrimNewPassword : req.body.confrimNewPassword
     }
     try {
-      let user_res = await req.userUC.updatePassword(user, id)
-      if (user_res.is_success !== true) {
+      let res_user = await req.userUC.updatePassword(user, id)
+      if (res_user.is_success !== true) {
         return res
-          .status(user_res.status)
-          .json(res_data.failed(user_res.reason))
+          .status(res_user.status)
+          .json(res_data.failed(res_user.reason))
       }
-      res.status(user_res.status).json(res_data.success())
+      res.status(res_user.status).json(res_data.success())
     } catch (e) {
       next(e)
     }
 
+  },
+  updateEmail : async (req, res, next)=>{
+    let id = req.user.id
+    let user = {
+      email : req.body.email,
+      otp_code : req.body.otp_code
+    }
+    try {
+      
+      let res_update = await req.userUC.updateEmail(user, id)
+      if(res_update.is_success !== true){
+        return res
+        .status(res_update.status).json(res_data.failed(res_update.reason))
+      }
+      res.status(res_update.status).json(res_data.success())
+    } catch (e) {
+      next(e)
+    }
   }
 
 };

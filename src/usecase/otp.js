@@ -2,6 +2,10 @@ const email_message = {
     REGISTRATION: {
         text_value: "your otp code : {otp}",
         html_value: "<b>your otp code: {otp} </b>"
+    },
+    UPDATEEMAIL: {
+        text_value: "your otp code : {otp}",
+        html_value: "<b>your otp code: {otp} </b>"
     }
 }
 class Otp {

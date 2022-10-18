@@ -39,7 +39,7 @@ class User {
     result.data = user
     return result
   }
-  async updateUser(user_data, id) {
+  async updateUserProfile(user_data, id) {
     let result = {
       is_success: false,
       reason: "failed",
@@ -52,11 +52,7 @@ class User {
       result.reason = "username already exist"
       return result
     }
-    user = await this.userRepository.getUserByEmail(user_data.email);
-    if (user != null) {
-      result.reason = "email already exist"
-      return result
-    }
+   
     user = await this.userRepository.getUserByPhone(user_data.phone);
     if (user != null) {
       result.reason = "phone already exist"
@@ -75,6 +71,7 @@ class User {
       reason : "",
       status : 400,
     }
+
     if(user_data.newPassword !== user_data.confrimNewPassword){
       result.reason = "confrim new password not match"
       return result
@@ -99,6 +96,30 @@ class User {
     result.status = 200
     return result
     
+  }
+  async updateEmail (user_data , id ){
+    let result = {
+      is_success : false,
+      reason : '',
+      status : 400,
+    }
+    let user = await this.userRepository.getUserByID(id)
+    if(user === null){
+      result.reason = "user not found"
+      result.status = 404
+      return result
+    }
+    let otp = await this.otpRepository.getOTP(user_data.email , user_data.otp_code,"UPDATEEMAIL" )
+    if(otp === null){
+      result.reason = "invalid otp code"
+      return result
+    }
+    await this.userRepository.updateUser(user_data, id)
+    await this.otpRepository.deleteAllOtp(user_data.email)
+    
+    result.is_success =true
+    result.status = 200
+    return result
   }
 }
 
