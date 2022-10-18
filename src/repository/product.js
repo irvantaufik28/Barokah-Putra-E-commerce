@@ -15,14 +15,13 @@ class ProductRepository {
           {
             model: this.imageProductModel,
             as: 'image_products',
-            attributes: ["url"],
           },
         ],
       })
     }
 
   async getProducts(product) {
-      return await this.productModel.findAll(product);
+      return await this.productModel.findAll(product)
   }
 
   async createProduct(product) {

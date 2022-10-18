@@ -25,6 +25,9 @@ module.exports = {
       category_id: {
         type: Sequelize.INTEGER
       },
+      cover_imageID: {
+        type: Sequelize.INTEGER
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

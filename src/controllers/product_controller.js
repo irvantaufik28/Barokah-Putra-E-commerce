@@ -41,6 +41,7 @@ module.exports = {
       sold: 0,
       description: req.body.description,
       category_id: req.body.category_id,
+      cover_image : null
     };
     try {
       let res_product = await req.productUC.addNewProduct(product);

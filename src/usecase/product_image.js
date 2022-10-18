@@ -1,7 +1,8 @@
 class ProductImageUC {
-    constructor(productImageRepository, productRepository) {
+    constructor(productImageRepository, productRepository,) {
         this.productImageRepository = productImageRepository
         this.productRepository = productRepository
+        
     }
     async getImageProductByProductID(product_id) {
         let result = {
@@ -75,6 +76,36 @@ class ProductImageUC {
         result.status = 200
         return result
     }
+
+    async changeCoverImage (image_id, product_id ){
+        let result = {
+            is_success : false,
+            reason : "failed",
+            status : 404
+        }
+        let getCoverImage = await this.productImageRepository.getCoverImage(product_id)
+        if(getCoverImage == null){
+            result.reason = "image not found"
+            return result
+        }
+        const changeCoverImageToFalse = {
+            cover_image : false
+        }
+        await this.updateImageProduct(changeCoverImageToFalse, getCoverImage.id)
+        const newCoverImage = {
+            cover_image : true
+        }
+
+        await this.updateImageProduct(newCoverImage, image_id)
+       const setCoverImageID = {
+        cover_imageID : image_id
+      }
+        await this.productRepository.updateProduct(setCoverImageID ,product_id)
+        result.is_success = true
+        result.status = 200
+        return result
+    }
+
     async deleteImageProduct(id) {
         let result = {
             is_success: false,

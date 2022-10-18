@@ -68,9 +68,11 @@ const addressUC = new AddressUseCase(
     new UserRepository()
 )
 const categoryUC = new CategoryUseCase(new CategoryRepository())
+
 const productUC = new ProductUseCase(
     new ProductRepository(),
-    new CategoryRepository()
+    new CategoryRepository(),
+    new ProductImageRepository()
 )
 
 const productImageUC = new ProductImageUseCase(

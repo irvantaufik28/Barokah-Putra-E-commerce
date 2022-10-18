@@ -35,6 +35,7 @@ module.exports = {
     imageData = {
       url: null,
       product_id: req.body.product_id,
+      cover_image : false
     };
     try {
       let imageProduct = null;
@@ -77,6 +78,24 @@ module.exports = {
       next(e);
     }
   },
+  
+  changeCoverImage: async (req, res, next) =>{
+    let image_id = req.query.image_id
+    let product_id = req.query.product_id
+    let res_update = await req.productImageUC.changeCoverImage(image_id ,product_id)
+    try {
+      if(res_update.is_success !== true){
+        return res
+        .status(res_update.status)
+        .json(res_data.failed(res_update.reason))
+      }
+      res.status(res_update.status).json(res_data.success())
+    } catch (e) {
+      next (e)
+    }
+
+  },
+
   deleteImageProduct: async (req, res, next) => {
     let id = req.params.id;
     try {

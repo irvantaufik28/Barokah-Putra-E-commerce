@@ -9,6 +9,7 @@ module.exports = {
                 sold: 0,
                 description:"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras eu varius diam, quis iaculis lorem. Quisque in purus vel quam auctor congue. Curabitur vel pulvinar ipsum, id consequat nulla.",
                 category_id: 1,
+                cover_imageID : 1,
                 createdAt: new Date(),
                 updatedAt: new Date()
             },
@@ -20,6 +21,7 @@ module.exports = {
                 sold: 0,
                 description:"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras eu varius diam, quis iaculis lorem. Quisque in purus vel quam auctor congue. Curabitur vel pulvinar ipsum, id consequat nulla.",
                 category_id: 1,
+                cover_imageID : 2,
                 createdAt: new Date(),
                 updatedAt: new Date()
             },
@@ -31,6 +33,7 @@ module.exports = {
                 sold: 0,
                 description:"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras eu varius diam, quis iaculis lorem. Quisque in purus vel quam auctor congue. Curabitur vel pulvinar ipsum, id consequat nulla.",
                 category_id: 2,
+                cover_imageID : 3,
                 createdAt: new Date(),
                 updatedAt: new Date()
             },
@@ -42,6 +45,7 @@ module.exports = {
                 sold: 0,
                 description:"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras eu varius diam, quis iaculis lorem. Quisque in purus vel quam auctor congue. Curabitur vel pulvinar ipsum, id consequat nulla.",
                 category_id: 2,
+                cover_imageID : 4,
                 createdAt: new Date(),
                 updatedAt: new Date()
             },

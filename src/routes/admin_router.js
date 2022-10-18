@@ -17,9 +17,10 @@ router.put('/product/update/:id',authorized.admin,handleUpload.upload.single('im
 router.delete('/product/delete/:id',authorized.admin, product.deleteProduct)
 
 // image product
-router.post('/image/add',handleUpload.upload.single('url'), imageProduct_controller.createImageProduct)
-router.put('/image/update/:id',handleUpload.upload.single('url'), imageProduct_controller.updateImageProduct)
-router.delete('/image/delete/:id', imageProduct_controller.deleteImageProduct)
+router.post('/image/add',authorized.admin, handleUpload.upload.single('url'), imageProduct_controller.createImageProduct)
+router.put('/image/update/:id',authorized.admin, handleUpload.upload.single('url'), imageProduct_controller.updateImageProduct)
+router.put('/image/change-cover-image/',authorized.admin, imageProduct_controller.changeCoverImage)
+router.delete('/image/delete/:id',authorized.admin, imageProduct_controller.deleteImageProduct)
 
 // Category
 router.post('/category/add' ,authorized.admin, category.addCategory)

@@ -1,7 +1,9 @@
+let defaultImage = require("../internal/constants/defaultImage")
 class Product {
-  constructor(productRepository, categoryRepository) {
+  constructor(productRepository, categoryRepository, productImageRepository) {
     this.productRepository = productRepository;
     this.categoryRepository = categoryRepository;
+    this.productImageRepository = productImageRepository
   }
 
   async getProductByID(id) {
@@ -54,11 +56,25 @@ class Product {
       result.reason = "failed add product, category not found"
       return result
     }
-    await this.productRepository.createProduct(data_product);
-
+    
+    let product = await this.productRepository.createProduct(data_product);
+    
+    const setImageAsCover ={
+      url : defaultImage.DEFAULT_PRODUCT_IMAGE,
+      cover_image : true,
+      product_id : product.id
+    }
+    let cover_image = await this.productImageRepository.createImageProduct(setImageAsCover)
+    
+    const setCoverImageID = {
+      cover_imageID : cover_image.id
+    }
+ 
+     await this.productRepository.updateProduct(setCoverImageID , product.id)
+     let getProduct = await this.productRepository.getProductByID(product.id)
     result.is_success = true;
     result.status = 200
-    result.data = product
+    result.data = getProduct
     return result
   }
 

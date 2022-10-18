@@ -79,8 +79,8 @@ class Address {
       return result;
     }
     if (existAddress.main_address === true) {
-      result.reason =
-        "cannot delete main address, please change main address first";
+      result.reason = "cannot delete main address, please change main address first";
+      result.status = 400
       return result;
     }
     await this.addressRepository.deleteAddress(id);
