@@ -96,6 +96,11 @@ class Address {
       reason: "",
       status: 404,
     };
+    let existAddress = await this.addressRepository.getAddressByID(address_id)
+    if(existAddress === null){
+      result.reason = "address not found"
+      return result
+    }
     let address = await this.addressRepository.getMainAddress(user_id);
     if (address === null) {
       result.reason = "customer not have address";
@@ -104,12 +109,11 @@ class Address {
     const changeMainAddressToFasle = {
       main_address: false,
     };
-
     await this.addressRepository.updateAddress(
       changeMainAddressToFasle,
       address.id
-    );
-
+      );
+      
     const newMainAddres = {
       main_address: true,
     };

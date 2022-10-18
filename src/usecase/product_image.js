@@ -83,6 +83,13 @@ class ProductImageUC {
             reason : "failed",
             status : 404
         }
+
+        let imageExist = await this.productImageRepository.getImageProductByID(image_id)
+        if(imageExist === null){
+            result.reason = "image not found"
+            return result
+        }
+
         let getCoverImage = await this.productImageRepository.getCoverImage(product_id)
         if(getCoverImage == null){
             result.reason = "image not found"
