@@ -54,16 +54,10 @@ module.exports = {
     let id = req.user.id
     let user = {
       oldPassword: req.body.oldPassword,
-      password: null
+      newPassword : req.body.newPassword,
+      confrimNewPassword : req.body.confrimNewPassword
     }
     try {
-
-      if (req.body.newPassword !== req.body.confrimPassword) {
-        return res
-          .status(400)
-          .json(res_data.failed("password and confrimPassword not", null));
-      }
-      user.password = req.body.newPassword
       let user_res = await req.userUC.updatePassword(user, id)
       if (user_res.is_success !== true) {
         return res

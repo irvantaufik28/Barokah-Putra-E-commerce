@@ -1,7 +1,9 @@
-const bcrypt = require("bcrypt")
+
 class User {
-  constructor(userRepository) {
+  constructor(userRepository, otpRepository,bcrypt) {
     this.userRepository = userRepository;
+    this.otpRepository = otpRepository,
+    this.bcrypt = bcrypt
   }
   async getAllUser() {
     let result = {
@@ -61,11 +63,7 @@ class User {
       return result
     }
     user = await this.userRepository.updateUser(user_data, id);
-    if (user == null) {
-      result.reason = "internal server error"
-      result.status = 500
-      return result
-    }
+
     result.is_success = true
     result.status = 200
     result.data = user
@@ -77,20 +75,25 @@ class User {
       reason : "",
       status : 400,
     }
-    user_data.oldPassword = bcrypt.hashSync(user_data.oldPassword, 10);
+    if(user_data.newPassword !== user_data.confrimNewPassword){
+      result.reason = "confrim new password not match"
+      return result
+    }
     
+
    let user = await this.userRepository.getUserByID(id)
     if(user === null){
       result.reason = "user not found"
       result.status = 404
       return result
     }
-    user.password = bcrypt.hashSync(user_data.password, 10);
-    console.log(user.password)
-    if(bcrypt.compareSync(user.password, user_data.oldPassword)){
-      result.reason = "confrim password incorect"
+    
+    if(!this.bcrypt.compareSync(user_data.oldPassword, user.password)){
+      result.reason = "old password not match"
       return result
     }
+    user_data.password = user_data.newPassword
+    user_data.password = this.bcrypt.hashSync(user_data.password, 10)
     await this.userRepository.updatePassword(user_data, id)
     result.is_success = true,
     result.status = 200

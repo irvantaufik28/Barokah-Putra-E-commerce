@@ -58,7 +58,11 @@ const authUC = new AuthUseCase(
     _,
 )
 
-const userUC = new UserUseCase(new UserRepository())
+const userUC = new UserUseCase(
+    new UserRepository(), 
+    new OtpRepository(),
+    bcrypt,
+    )
 const addressUC = new AddressUseCase(
     new AddressRepository(),
     new UserRepository()
