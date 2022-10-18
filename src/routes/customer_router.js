@@ -35,7 +35,8 @@ router.get('/category/:id', category_controller.getOneCategory)
 // address
 router.get('/address/',authorized.customer, address_controller.getAddressByUserID)
 router.post('/address/add',authorized.customer, address_controller.createAddress)
-router.put('/address/update/',authorized.customer, address_controller.updatetAddress)
+router.put('/address/update/:id',authorized.customer, address_controller.updatetAddress)
+router.put('/address/change-main-address/:address_id',authorized.customer, address_controller.changeMainAddress)
 router.delete('/address/delete/:id',authorized.customer, address_controller.deleteAddress)
 
 // Order

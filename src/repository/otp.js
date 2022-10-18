@@ -1,10 +1,10 @@
-const { otp } = require("../database/models")
+const { Otp } = require("../database/models")
 const func = require("../libs/function")
 const Op = require('sequelize').Op
 
 class OtpRepository {
     constructor() {
-        this.OtpModel = otp
+        this.OtpModel = Otp
     }
     async deleteAllOtp(email) {
         await this.OtpModel.destroy({

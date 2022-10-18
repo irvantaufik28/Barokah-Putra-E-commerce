@@ -9,6 +9,7 @@ module.exports = {
                 postal_code : "44151",
                 detail_address : "Jl.abc no 123",
                 user_id : 2,
+                main_address : true,
                 createdAt: new Date(),
                 updatedAt: new Date()
             }

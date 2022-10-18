@@ -7,7 +7,7 @@ module.exports = {
       let user_id = req.user.id
       let res_address = await req.addressUC.getAddressByUserID(user_id);
       if (res_address.is_success !== true) {
-        
+
         return res
           .status(res_address.status)
           .json(res_data.failed(res_address.reason, null));
@@ -20,12 +20,13 @@ module.exports = {
   createAddress: async (req, res, next) => {
     try {
       let address = {
-        province :req.body.province,
-        city :req.body.city,
-        postal_code:req.body.postal_code,
-        detail_address:req.body.detail_address,
-        user_id :req.user.id
-      } 
+        province: req.body.province,
+        city: req.body.city,
+        postal_code: req.body.postal_code,
+        detail_address: req.body.detail_address,
+        user_id: req.user.id,
+        main_address: true,
+      }
 
       let create_res = await req.addressUC.addNewAddress(address);
       if (create_res.is_success !== true) {
@@ -43,12 +44,12 @@ module.exports = {
     let id = req.user.id;
     try {
       let address = {
-        province :req.body.province,
-        city :req.body.city,
-        postal_code:req.body.postal_code,
-        detail_address:req.body.detail_address,
-        user_id :req.user.id
-      } 
+        province: req.body.province,
+        city: req.body.city,
+        postal_code: req.body.postal_code,
+        detail_address: req.body.detail_address,
+        user_id: req.user.id
+      }
 
       let res_update = await req.addressUC.updateAddress(address, id);
       if (res_update.is_success !== true) {
@@ -62,8 +63,8 @@ module.exports = {
     }
   },
   deleteAddress: async (req, res, next) => {
+    let id = req.params.id;
     try {
-      let id = req.params.id;
       let delete_res = await req.addressUC.deleteAddress(id);
       if (delete_res.is_success !== true) {
         return res
@@ -75,4 +76,24 @@ module.exports = {
       next(e);
     }
   },
+  changeMainAddress: async (req, res, next) => {
+    let id = req.params.id
+    let address = {
+      user_id: req.user_id,
+      main_address: true
+    }
+    try {
+
+      let res_update = await req.addressUC.changeMainAddress(address, id)
+      if (res_update.is_success !== true) {
+        return res
+          .status(res_update.status)
+          .json(res_data.failed(res_update.reason))
+      }
+      res.status(res_update.status).json(res_data.success())
+
+    } catch (e) {
+      next(e)
+    }
+  }
 };
