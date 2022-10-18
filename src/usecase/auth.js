@@ -1,9 +1,10 @@
 const default_Image = require("../internal/constants/defaultImage")
 
 class Auth {
-    constructor(authRepository, userRepository, bcrypt, cloudinary, generateToken, _) {
+    constructor(authRepository, userRepository,otpRepository, bcrypt, cloudinary, generateToken, _) {
         this.authRepository = authRepository;
         this.userRepository = userRepository;
+        this.otpRepository = otpRepository;
         this.cloudinary = cloudinary;
         this.token = generateToken;
         this._ = _;
@@ -17,6 +18,12 @@ class Auth {
             status: 404,
             data: null,
             token: null
+        }
+        
+        let otp = await this.otpRepository.getOTP(user_data.email, user_data.otp_code, "REGISTRATION")
+        if(otp === null){
+            result.reason = "invalid otp code"
+            return result
         }
         let user = await this.userRepository.getUserByUsername(user_data.username);
         if (user != null) {
@@ -49,6 +56,8 @@ class Auth {
         }
         let newUser = this._.omit(user.dataValues, ['password'])
         let token = this.token(newUser)
+
+        await this.otpRepository.deleteAllOtp(user_data.email)
 
         result.is_success = true;
         result.status = 200

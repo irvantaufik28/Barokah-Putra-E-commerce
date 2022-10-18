@@ -15,6 +15,7 @@ module.exports = {
         email: req.body.email,
         avatar: null,
         role_id: 2,
+        otp_code : req.body.otp_code
       };
       let avatar = null;
       if (req.file != undefined) {

@@ -51,6 +51,7 @@ const otpRouter = require("./src/routes/otp_router")
 const authUC = new AuthUseCase(
     new AuthRepository(),
     new UserRepository(), 
+    new OtpRepository(),
     bcrypt, 
     cloudinary,
     generateToken, 

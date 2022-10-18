@@ -1,5 +1,5 @@
 const email_message = {
-    REGISTATION: {
+    REGISTRATION: {
         text_value: "your otp code : {otp}",
         html_value: "<b>your otp code: {otp} </b>"
     }
@@ -57,8 +57,8 @@ class Otp {
     async getOTPByEmail(email) {
         return await this.otpRepository.getOTPByEmail(email)
     }
-    async deleteAllIOTP(email) {
-        await this.otpRepository.deleteAllIotp(email)
+    async deleteAllOtp(email) {
+        await this.otpRepository.deleteAllOtp(email)
     }
 }
 module.exports = Otp
