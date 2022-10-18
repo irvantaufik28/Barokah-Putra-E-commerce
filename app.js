@@ -38,10 +38,15 @@ const OrderDetailRepository = require("./src/repository/orderDetail")
 const ChatRepository = require ("./src/repository/chat")
 const ChatUseCase = require ("./src/usecase/chat")
 
+const EmailRepository =require("./src/repository/email")
+const OtpRepository = require("./src/repository/otp")
+const OtpUseCase =require("./src/usecase/otp")
+
 const adminRouter = require("./src/routes/admin_router")
 const customerRouter = require("./src/routes/customer_router")
 const authRouter = require("./src/routes/auth_router")
 const chatRouter = require("./src/routes/chat_router")
+const otpRouter = require("./src/routes/otp_router")
 
 const authUC = new AuthUseCase(
     new AuthRepository(),
@@ -76,6 +81,11 @@ const orderUC = new OrderUseCase(
 
 const chatUC = new ChatUseCase(new ChatRepository())
 
+const otpUC = new OtpUseCase(
+    new OtpRepository(),
+    new EmailRepository()
+    )
+
 
 app.use((req, res, next) => {
     req.authUC = authUC
@@ -86,6 +96,7 @@ app.use((req, res, next) => {
     req.addressUC = addressUC
     req.orderUC = orderUC
     req.chatUC = chatUC
+    req.otpUC = otpUC
     next()
 })
 app.get('/', (req, res) => {
@@ -95,6 +106,7 @@ app.get('/', (req, res) => {
 app.use('/admin', adminRouter)
 app.use('/customer', customerRouter)
 app.use('/chat', chatRouter)
+app.use('/otp', otpRouter)
 app.use('/', authRouter)
 
 

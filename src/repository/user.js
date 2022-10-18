@@ -1,6 +1,6 @@
 const { User } = require("../database/models");
 const { Address } = require("../database/models");
-const bcrypt = require("bcrypt");
+
 
 class UserRepository {
   constructor() {
