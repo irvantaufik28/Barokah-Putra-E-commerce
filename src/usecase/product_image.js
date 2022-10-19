@@ -1,8 +1,10 @@
+const defaultImage = require('../internal/constants/defaultImage')
 class ProductImageUC {
-    constructor(productImageRepository, productRepository,) {
+    constructor(productImageRepository, productRepository, cloudinary) {
         this.productImageRepository = productImageRepository
         this.productRepository = productRepository
-        
+        this.cloudinary = cloudinary
+
     }
     async getImageProductByProductID(product_id) {
         let result = {
@@ -47,18 +49,58 @@ class ProductImageUC {
             status: 404,
             data: null
         }
+        if (data.url === null) {
+            result.reason = "failed upload, please insert file"
+            return result
+        }
         let product = await this.productRepository.getProductByID(data.product_id)
         if (product == null) {
             result.reason = "failed add image, Product not found"
             return result
-
         }
+        let existImage = await this.productImageRepository.getAllImageByProductID(data.product_id)
+
+       this.deleteDefaultImage(existImage)
+
+        let uploadImage = await this.cloudinary.uploadCloudinaryProduct(data.url)
+        data.url = uploadImage
         let image = await this.productImageRepository.createImageProduct(data)
+
+        let getCoverImage = await this.productImageRepository.getAllImageByProductID(data.product_id)
+        await this.setCoverImage(getCoverImage)
+
+
         result.is_success = true;
         result.status = 200
         result.data = image
         return result
     }
+    async deleteDefaultImage(image) {
+        await image.forEach(data => {
+            if (data.url === defaultImage.DEFAULT_PRODUCT_IMAGE) {
+                this.deleteImageProduct(data.id)
+            }
+        });
+    }
+
+    async setCoverImage(image) {
+        await image.filter((data) => {
+            if (data.cover_image === true) {
+                return
+            } else {
+                const newCoverImage = {
+                    cover_image: true
+                }
+                this.productImageRepository.updateImageProduct(newCoverImage, image[0].id)
+
+                const setCoverImageID = {
+                    cover_imageID: image[0].id
+                }
+                this.productRepository.updateProduct(setCoverImageID, image[0].product_id)
+            }
+        })
+    }
+
     async updateImageProduct(oldImage, id) {
         let result = {
             is_success: false,
@@ -77,37 +119,38 @@ class ProductImageUC {
         return result
     }
 
-    async changeCoverImage (image_id, product_id ){
+    async changeCoverImage(image_id, product_id) {
         let result = {
-            is_success : false,
-            reason : "failed",
-            status : 404
+            is_success: false,
+            reason: "failed",
+            status: 404
         }
 
         let imageExist = await this.productImageRepository.getImageProductByID(image_id)
-        if(imageExist === null){
+        if (imageExist === null) {
             result.reason = "image not found"
             return result
         }
 
         let getCoverImage = await this.productImageRepository.getCoverImage(product_id)
-        if(getCoverImage == null){
+        if (getCoverImage == null) {
             result.reason = "image not found"
             return result
         }
         const changeCoverImageToFalse = {
-            cover_image : false
+            cover_image: false
         }
         await this.updateImageProduct(changeCoverImageToFalse, getCoverImage.id)
         const newCoverImage = {
-            cover_image : true
+            cover_image: true
         }
 
         await this.updateImageProduct(newCoverImage, image_id)
-       const setCoverImageID = {
-        cover_imageID : image_id
-      }
-        await this.productRepository.updateProduct(setCoverImageID ,product_id)
+
+        const setCoverImageID = {
+            cover_imageID: image_id
+        }
+        await this.productRepository.updateProduct(setCoverImageID, product_id)
         result.is_success = true
         result.status = 200
         return result

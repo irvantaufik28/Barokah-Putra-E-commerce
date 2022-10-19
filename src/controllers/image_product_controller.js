@@ -38,9 +38,9 @@ module.exports = {
       cover_image : false
     };
     try {
-      let imageProduct = null;
-      imageProduct = await url.uploadCloudinaryProduct(req.file.path);
-      imageData.url = imageProduct;
+     if(req.file !== undefined){
+      imageData.url = (req.file.path)
+     }
       let res_createImage = await req.productImageUC.createImageProduct(
         imageData
       );

@@ -9,6 +9,7 @@ const order_controller = require('../controllers/order_controller')
 const authorized = require('../middleware/auth')
 
 // user
+router.get('/profile/', authorized.customer, user_controller.getUserProfil)
 router.put('/update-profile/',authorized.customer ,user_controller.updateProfile)
 router.put('/update-password/',authorized.customer ,user_controller.updatePassword)
 router.put('/update-email/',authorized.customer ,user_controller.updateEmail)

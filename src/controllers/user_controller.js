@@ -14,14 +14,14 @@ module.exports = {
       next(e);
     }
   },
-  getUserByID: async (req, res, next) => {
+  getUserProfil: async (req, res, next) => {
     try {
-      let id = req.params.id;
+      let id = req.user.id;
       let res_user = await req.userUC.getUserByID(id);
       if (res_user == null) {
         return res
           .status(404)
-          .json(res_data.failed(res_user.message, null));
+          .json(res_data.failed(res_user.message));
       }
       res.status(200).json(res_data.success(res_user.data));
     } catch (e) {

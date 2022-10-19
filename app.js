@@ -77,7 +77,8 @@ const productUC = new ProductUseCase(
 
 const productImageUC = new ProductImageUseCase(
     new ProductImageRepository(),
-    new ProductRepository()
+    new ProductRepository(),
+    cloudinary,
 )
 
 const orderUC = new OrderUseCase(

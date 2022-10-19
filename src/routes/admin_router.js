@@ -9,7 +9,6 @@ const authorized = require("../middleware/auth")
 
 // user
 router.get('/user', authorized.admin,user.getAllUser)
-router.get('/user/:id',authorized.admin, user.getUserByID)
 
 // Product
 router.post('/product/add',authorized.admin, handleUpload.upload.single('image') ,product.addProduct)

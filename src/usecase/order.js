@@ -68,6 +68,8 @@ class Order {
           total,
         };
 
+        
+
         let existDetail = await this.orderDetailRepository.getByOrderAndProduct(order_id, product.id);
 
         if (existDetail !== null) {
