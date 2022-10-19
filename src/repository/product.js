@@ -23,7 +23,7 @@ class ProductRepository {
   async getProducts(product) {
       return await this.productModel.findAll(product)
   }
-
+  
   async createProduct(product) {
     return await this.productModel.create(product);
   }
